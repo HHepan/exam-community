@@ -13,6 +13,14 @@ class DetailedExamScreen1 extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text('Detailed Exam Screen 1'),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: '请输入文本',
+                ),
+              ),
+            ),
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
