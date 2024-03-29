@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../entity/BlogPost.dart';
+import 'add-blog.dart';
 import 'comments.dart';
 
 class Community extends StatefulWidget {
@@ -56,6 +57,15 @@ class _CommunityState extends State<Community> {
             ),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddBlog()),
+          );
+        },
+        child: Icon(Icons.add),
       ),
     );
   }
