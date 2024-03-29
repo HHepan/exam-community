@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 class AddBlog extends StatelessWidget {
-  int _currentLines = 1; // 初始行数为 1
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
