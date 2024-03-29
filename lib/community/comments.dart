@@ -33,7 +33,10 @@ class Comments extends StatelessWidget {
             padding: EdgeInsets.all(8.0),
             child: TextField(
               maxLines: null,
-              decoration: InputDecoration(hintText: '欢迎留下评论'),
+              decoration: InputDecoration(
+                  hintText: '欢迎留下评论',
+                  border: OutlineInputBorder()
+              ),
             ),
           ),
         ],

@@ -39,7 +39,7 @@ class AddBlog extends StatelessWidget {
                 width: 300, // 设置父容器的宽度
                 child: ElevatedButton(
                   onPressed: () {
-                    // 按钮点击事件处理逻辑
+                    Navigator.pop(context);
                   },
                   child: Text('取消'),
                 ),
