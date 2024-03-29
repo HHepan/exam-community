@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:exam_community/personal/personal.dart';
 import 'package:flutter/material.dart';
 import 'community/community.dart';
