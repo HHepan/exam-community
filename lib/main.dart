@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:exam_community/personal/personal.dart';
 import 'package:flutter/material.dart';
 import 'community/community.dart';
@@ -16,6 +18,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int _selectedIndex = 0;
+  var _title = '主页';
 
   static List<Widget> _widgetOptions = <Widget>[
     Exam(),
@@ -26,6 +29,13 @@ class _MyAppState extends State<MyApp> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      if (_selectedIndex == 0) {
+        _title = '主页';
+      } else if (_selectedIndex == 1) {
+        _title = '社区';
+      } else if (_selectedIndex == 2) {
+        _title = '我的';
+      }
     });
   }
 
@@ -39,7 +49,7 @@ class _MyAppState extends State<MyApp> {
       ),
       home: Scaffold(
         appBar: AppBar(
-            title: const Text('研考社'),
+            title: Text(_title),
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         ),
         body: Center(child: _widgetOptions.elementAt(_selectedIndex)),
