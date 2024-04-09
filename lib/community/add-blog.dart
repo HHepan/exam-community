@@ -27,7 +27,7 @@ class AddBlog extends StatelessWidget {
             alignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 300, // 设置父容器的宽度
+                width: 360, // 设置父容器的宽度
                 child: ElevatedButton(
                   onPressed: () {
                     // 按钮点击事件处理逻辑
@@ -36,7 +36,7 @@ class AddBlog extends StatelessWidget {
                 ),
               ),
               Container(
-                width: 300, // 设置父容器的宽度
+                width: 360, // 设置父容器的宽度
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context);
