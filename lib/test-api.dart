@@ -3,9 +3,9 @@ import 'package:dio/dio.dart';
 class ApiService {
   final Dio _dio = Dio();
 
-  Future<Map<String, dynamic>> fetchDataFromSpringBoot() async {
+  Future<String> fetchDataFromSpringBoot() async {
     try {
-      Response response = await _dio.get('http://your-spring-boot-api-url');
+      Response response = await _dio.get('http://192.168.85.1:8080/flutter/getAll');
 
       if (response.statusCode == 200) {
         return response.data;
