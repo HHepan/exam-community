@@ -34,17 +34,7 @@ class AddBlog extends StatelessWidget {
                   },
                   child: Text('确认发布'),
                 ),
-              ),
-              SizedBox(height: 10),
-              Container(
-                width: 360, // 设置父容器的宽度
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('取消'),
-                ),
-              ),
+              )
             ],
           ),
         ],
