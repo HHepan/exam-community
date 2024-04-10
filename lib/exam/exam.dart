@@ -8,39 +8,37 @@ class Exam extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('Page Exam'),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => DetailedExamScreen1()),
-                );
-              },
-              child: Text('前往 detailed exam screen 1'),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 从本地资源加载图片，假设图片文件名为image_example.png
+            Image.asset(
+              'lib/assets/images/img_2.png',
+              width: 700, // 设置图片宽度
+              height: 240, // 设置图片高度
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => DetailedExamScreen2()),
-                );
-              },
-              child: Text('前往 detailed exam screen 2'),
+            SizedBox(height: 20),
+            Container(
+              width: 400, // 设置按钮的最小宽度
+              child: FloatingActionButton.extended(
+                  onPressed: () => {
+
+                  },
+                  label: Text('我的考试', style: TextStyle(fontSize: 20))
+              )
             ),
-            ElevatedButton(
-              onPressed: () {
-                ApiService().fetchDataFromSpringBoot().then((data) {
-                  print(data);
-                }).catchError((error) {
-                  print(error);
-                });
-              },
-              child: Text('测试连接后台'),
-            ),
+            SizedBox(height: 20),
+            Container(
+                width: 400, // 设置按钮的最小宽度
+                child: FloatingActionButton.extended(
+                    onPressed: () => {
+
+                    },
+                    label: Text('随机刷题', style: TextStyle(fontSize: 20))
+                )
+            )
           ],
         ),
       ),

@@ -58,6 +58,7 @@ class EditPersonal extends StatelessWidget {
                   child: Text('保存信息'),
                 ),
               ),
+              SizedBox(height: 10),
               Container(
                 width: 360, // 设置父容器的宽度
                 child: ElevatedButton(
@@ -73,7 +74,7 @@ class EditPersonal extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          
+
         },
         label: Text('修改密码', style: TextStyle(fontSize: 15)),
         icon: Icon(Icons.edit),
