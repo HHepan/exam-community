@@ -13,7 +13,7 @@ class _CommunityState extends State<Community> {
   // 假设已经有一个包含20条博客数据的列表
   List<BlogPost> blogPosts = List.generate(20, (index) => BlogPost(
     title: 'Title $index',
-    content: 'Content $index',
+    content: 'Content $index @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@',
   ));
 
   @override

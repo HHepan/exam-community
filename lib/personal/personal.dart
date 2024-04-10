@@ -6,112 +6,124 @@ class Personal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            FractionallySizedBox(
+              widthFactor: 1.0, // 设置宽度占满屏幕
+              child: Card(
+                elevation: 4,
+                margin: EdgeInsets.zero,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '张三，欢迎您~', // 修改为加粗放大的字体
+                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        '用户账号：',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Text(
+                            '获赞', // 添加点赞图标
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          Icon(Icons.thumb_up), // 点赞图标
+                          Text(
+                            '：9999', // 添加点赞图标
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 按钮均匀分布
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    // 点击“我的帖子”按钮的操作
+                  },
+                  child: Text('我的帖子', style: TextStyle(fontSize: 18)),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // 点击“我的评论”按钮的操作
+                  },
+                  child: Text('我的评论', style: TextStyle(fontSize: 18)),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // 点击“我的收藏”按钮的操作
+                  },
+                  child: Text('我的收藏', style: TextStyle(fontSize: 18)),
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
+            FractionallySizedBox(
+              widthFactor: 1.0,
+              child: Card(
+                elevation: 4,
+                margin: EdgeInsets.zero,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '个人信息',
+                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        '性别：男',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        '年龄：20',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        '手机号：13100000000',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        '邮箱：123456@mail.com',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Edit button on pressed event
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => EditPersonal()),
           );
         },
         child: Icon(Icons.edit),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Card(
-              margin: EdgeInsets.all(16),
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '您好！张三',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      '获赞数: 100',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            // “我的帖子”按钮点击事件
-                          },
-                          icon: Icon(Icons.article_outlined),
-                          label: Text('我的帖子'),
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(0),
-                              ),
-                            ),
-                          ),
-                        ),
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            // “我的评论”按钮点击事件
-                          },
-                          icon: Icon(Icons.comment_outlined),
-                          label: Text('我的评论'),
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(0),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Card(
-              margin: EdgeInsets.all(16),
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '性别: 男',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      '手机号: 1234567890',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      '邮箱: example@example.com',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -55,7 +55,7 @@ class EditPersonal extends StatelessWidget {
                   onPressed: () {
                     // 按钮点击事件处理逻辑
                   },
-                  child: Text('保存修改'),
+                  child: Text('保存信息'),
                 ),
               ),
               Container(
@@ -70,6 +70,13 @@ class EditPersonal extends StatelessWidget {
             ],
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          
+        },
+        label: Text('修改密码', style: TextStyle(fontSize: 15)),
+        icon: Icon(Icons.edit),
       ),
     );
   }
