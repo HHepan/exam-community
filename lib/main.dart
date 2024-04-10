@@ -42,13 +42,13 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'exam-community-app',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
         useMaterial3: true,
       ),
       home: Scaffold(
         appBar: AppBar(
             title: Text(_title),
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          backgroundColor: ColorScheme.fromSeed(seedColor: Colors.lightBlue).inversePrimary,
         ),
         body: Center(child: _widgetOptions.elementAt(_selectedIndex)),
         bottomNavigationBar: BottomNavigationBar(
