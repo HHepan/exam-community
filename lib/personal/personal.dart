@@ -113,6 +113,20 @@ class Personal extends StatelessWidget {
                 ),
               ),
             ),
+            SizedBox(height: 20),
+            Container(
+                width: 400, // 设置按钮的最小宽度
+                child: FloatingActionButton.extended(
+                    onPressed: () => {
+
+                    },
+                    label: Text('退出登录',
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: ColorScheme.fromSeed(seedColor: Colors.deepOrange).primary)
+                    )
+                )
+            )
           ],
         ),
       ),
