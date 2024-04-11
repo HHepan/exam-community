@@ -28,6 +28,7 @@ class _MyAppState extends State<MyApp> {
   void onLogout() {
     setState(() {
       isLoggedIn = false;
+      _selectedIndex = 0;
     });
   }
 

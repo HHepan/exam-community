@@ -76,11 +76,6 @@ class _Personal extends State<Personal> {
                         style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 10),
-                      Text(
-                        '用户账号：',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      SizedBox(height: 10),
                       Row(
                         children: [
                           Text(
