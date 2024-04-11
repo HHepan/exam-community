@@ -1,8 +1,58 @@
 import 'package:flutter/material.dart';
-
 import 'edit-personal.dart';
 
-class Personal extends StatelessWidget {
+class Personal extends StatefulWidget {
+  final Function onLogout;
+
+  Personal({required this.onLogout});
+
+  @override
+  _Personal createState() => _Personal();
+}
+
+class _Personal extends State<Personal> {
+  void _logoutDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('确认退出？'),
+          actions: [
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // 关闭确认退出对话框
+                    },
+                    child: Text('取消'),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () {
+                      // 在这里执行退出登录操作
+                      widget.onLogout();
+                      // 可以在这里处理清除用户信息等操作
+                      Navigator.of(context).pop();  // 关闭确认退出对话框
+                    },
+                    child: Text(
+                      '退出',
+                      style: TextStyle(
+                        color: ColorScheme.fromSeed(seedColor: Colors.deepOrange).primary,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,9 +167,7 @@ class Personal extends StatelessWidget {
             Container(
                 width: 400, // 设置按钮的最小宽度
                 child: FloatingActionButton.extended(
-                    onPressed: () => {
-
-                    },
+                    onPressed: _logoutDialog,
                     label: Text('退出登录',
                         style: TextStyle(
                             fontSize: 20,
