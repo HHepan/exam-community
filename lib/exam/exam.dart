@@ -1,3 +1,5 @@
+import 'package:exam_community/exam/MyExam.dart';
+import 'package:exam_community/exam/RandomExam.dart';
 import 'package:flutter/material.dart';
 
 class Exam extends StatelessWidget {
@@ -21,7 +23,10 @@ class Exam extends StatelessWidget {
                 SizedBox(height: 10),
                 ElevatedButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MyExam())
+                      );
                     },
                     child: Text('我的考试'),
                     style: ButtonStyle(
@@ -38,7 +43,10 @@ class Exam extends StatelessWidget {
                 SizedBox(height: 10),
                 ElevatedButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.push(
+                          context, 
+                          MaterialPageRoute(builder: (context) => RandomExam())
+                      );
                     },
                     child: Text('随机考试'),
                     style: ButtonStyle(
