@@ -1,7 +1,6 @@
 package com.hepan.api.service;
 
 import com.hepan.api.entity.AdUser;
-import com.hepan.api.entity.User;
 import com.hepan.api.repository.AdUserRepository;
 import org.springframework.stereotype.Service;
 
@@ -35,5 +34,16 @@ public class AdUserServiceImpl implements AdUserService {
         adUser.setPhone(user.getPhone());
         adUser.setPassword(user.getPassword());
         return this.adUserRepository.save(adUser);
+    }
+
+    @Override
+    public AdUser update(AdUser user) {
+        AdUser oldUser = this.adUserRepository.findById(user.getId()).get();
+        oldUser.setName(user.getName());
+        oldUser.setPhone(user.getPhone());
+        oldUser.setAge(user.getAge());
+        oldUser.setSex(user.getSex());
+        oldUser.setEmail(user.getEmail());
+        return this.adUserRepository.save(oldUser);
     }
 }

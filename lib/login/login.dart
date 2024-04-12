@@ -1,6 +1,7 @@
 import 'package:exam_community/login/register.dart';
 import 'package:flutter/material.dart';
 import '../entity/User.dart';
+import '../global-config.dart';
 import '../services/user-service.dart';
 
 class Login extends StatefulWidget {
@@ -70,6 +71,7 @@ class _LoginState extends State<Login> {
                       );
                       User loginUser = await _userService.login(user);
                       if (loginUser.phone != '') {
+                        globalConfig().updateConfig(currentUser: loginUser);
                         // 调用父组件传递的登录回调函数
                         widget.onLogin();
                       } else {

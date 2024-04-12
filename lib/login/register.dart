@@ -94,7 +94,6 @@ class _RegisterState extends State<Register> {
                         phone: _phoneRegController.text,
                         password: _passwordRegController.text,
                       );
-                      print('will register ${user}');
                       User registerUser = await _userService.register(user);
                       if (registerUser.phone != '') {
                         _dialog();

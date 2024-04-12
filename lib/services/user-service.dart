@@ -25,4 +25,12 @@ class UserService {
     );
     return User.getUserFromJson(response.data);
   }
+
+  Future<User> update(User user) async {
+    Response response = await _dio.post(
+      '${globalConfig().apiUrl}/ad-user/update',
+      data: user.toJson(), // 将用户对象转换为 JSON 格式并发送
+    );
+    return User.getUserFromJson(response.data);
+  }
 }

@@ -1,3 +1,4 @@
+import 'package:exam_community/global-config.dart';
 import 'package:flutter/material.dart';
 import 'edit-personal.dart';
 
@@ -34,6 +35,8 @@ class _Personal extends State<Personal> {
                     onPressed: () {
                       // 在这里执行退出登录操作
                       widget.onLogout();
+                      // 清除当前登录用户信息
+                      globalConfig().updateConfig(currentUser: null);
                       // 可以在这里处理清除用户信息等操作
                       Navigator.of(context).pop();  // 关闭确认退出对话框
                     },
@@ -72,7 +75,7 @@ class _Personal extends State<Personal> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '张三，欢迎您~', // 修改为加粗放大的字体
+                        '${globalConfig().currentUser?.name}，欢迎您~', // 修改为加粗放大的字体
                         style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 10),
@@ -135,22 +138,22 @@ class _Personal extends State<Personal> {
                       ),
                       SizedBox(height: 10),
                       Text(
-                        '性别：男',
+                        '性别：${globalConfig().currentUser?.sex != null && globalConfig().currentUser!.sex.isNotEmpty ? globalConfig().currentUser?.sex : "-"}',
                         style: TextStyle(fontSize: 18),
                       ),
                       SizedBox(height: 10),
                       Text(
-                        '年龄：20',
+                        '年龄：${globalConfig().currentUser?.age != null && globalConfig().currentUser!.age.isNotEmpty ? globalConfig().currentUser?.age : "-"}',
                         style: TextStyle(fontSize: 18),
                       ),
                       SizedBox(height: 10),
                       Text(
-                        '手机号：13100000000',
+                        '手机号：${globalConfig().currentUser?.phone != null && globalConfig().currentUser!.phone.isNotEmpty ? globalConfig().currentUser?.phone : "-"}',
                         style: TextStyle(fontSize: 18),
                       ),
                       SizedBox(height: 10),
                       Text(
-                        '邮箱：123456@mail.com',
+                        '邮箱：${globalConfig().currentUser?.email != null && globalConfig().currentUser!.email.isNotEmpty ? globalConfig().currentUser?.email : "-"}',
                         style: TextStyle(fontSize: 18),
                       ),
                     ],
@@ -177,11 +180,15 @@ class _Personal extends State<Personal> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => EditPersonal()),
+            MaterialPageRoute(builder: (context) => EditPersonal(personalSetState: setPersonalState)),
           );
         },
         child: Icon(Icons.edit),
       ),
     );
+  }
+
+  void setPersonalState() {
+    setState(() {});
   }
 }
