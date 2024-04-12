@@ -6,4 +6,6 @@ public interface AdUserService {
     AdUser login(AdUser user);
 
     AdUser register(AdUser user);
+
+    AdUser update(AdUser user);
 }

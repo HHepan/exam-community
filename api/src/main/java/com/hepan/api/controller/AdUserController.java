@@ -41,8 +41,18 @@ public class AdUserController {
         return this.adUserService.register(user);
     }
 
+    @PostMapping("update")
+    @ResponseStatus(HttpStatus.CREATED)
+    public AdUser update(@RequestBody AdUser user) {
+        return this.adUserService.update(user);
+    }
+
     private interface AdLoginJsonView extends
             AdUser.IdJsonView,
+            AdUser.NameJsonView,
+            AdUser.AgeJsonView,
+            AdUser.SexJsonView,
+            AdUser.EmailJsonView,
             AdUser.PhoneJsonView,
             AdUser.PasswordJsonView
     {}

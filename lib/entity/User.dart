@@ -1,5 +1,6 @@
 // 用户数据模型
 class User {
+  final int id;
   final String phone;
   final String password;
   final String sex;
@@ -10,6 +11,7 @@ class User {
   User({
     required this.phone,
     required this.password,
+    this.id = 0,
     this.sex = '',
     this.name = '',
     this.age = '',
@@ -17,10 +19,11 @@ class User {
 
   @override
   String toString() {
-    return 'User{phone: $phone, password: $password, sex: $sex, name: $name, age: $age, email: $email}';
+    return 'User{id: $id, phone: $phone, password: $password, sex: $sex, name: $name, age: $age, email: $email}';
   }
 
   static User getUserFromJson(Map<String, dynamic> json) {
+    int idFromJson = 0;
     String phoneFromJson = '';
     String passwordFromJson = '';
     String sexFromJson = '';
@@ -28,6 +31,9 @@ class User {
     String ageFromJson = '';
     String emailFromJson = '';
 
+    if (json['id'] != null) {
+      idFromJson = json['id'];
+    }
     if (json['phone'] != null) {
       phoneFromJson = json['phone'];
     }
@@ -48,6 +54,7 @@ class User {
     }
 
     return User(
+      id: idFromJson,
       name: nameFromJson,
       phone: phoneFromJson,
       password: passwordFromJson,
@@ -58,6 +65,7 @@ class User {
   }
 
   Map<String, dynamic> toJson() => {
+    'id': id,
     'phone': phone,
     'password': password,
     'sex': sex,
