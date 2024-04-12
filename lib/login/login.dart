@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../entity/User.dart';
+import '../services/user-service.dart';
 
 class Login extends StatefulWidget {
   final Function onLogin;
@@ -11,18 +12,20 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final UserService _userService = UserService(); // 创建 UserService 实例
+  String _errorMessage = ''; // 用于存储错误消息
+  TextEditingController _phoneController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    TextEditingController _phoneController = TextEditingController();
-    TextEditingController _passwordController = TextEditingController();
-
-    @override
-    void dispose() {
-      _phoneController.dispose();
-      _passwordController.dispose();
-      super.dispose();
-    }
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorScheme.fromSeed(seedColor: Colors.lightBlue).inversePrimary,
@@ -51,17 +54,31 @@ class _LoginState extends State<Login> {
               },
             ),
             SizedBox(height: 20),
+            Text(
+              _errorMessage,
+              style: TextStyle(color: Colors.red),
+            ),
+            SizedBox(height: 20),
             Container(
                 width: 400, // 设置按钮的最小宽度
                 child: FloatingActionButton.extended(
-                    onPressed: () {
+                    onPressed: () async {
                       User user = User(
                         phone: _phoneController.text,
                         password: _passwordController.text,
                       );
                       print('${user}');
-                      // 调用父组件传递的登录回调函数
-                      widget.onLogin();
+                      User loginUser = await _userService.login(user);
+                      print('loginUser ${loginUser}');
+                      if (loginUser.phone != '') {
+                        // 调用父组件传递的登录回调函数
+                        widget.onLogin();
+                      } else {
+                        // 用户名或者密码错误，执行这里
+                        setState(() {
+                          _errorMessage = '用户名或密码错误，请再试';
+                        });
+                      }
                     },
                     label: Text('登录',
                         style: TextStyle(
