@@ -4,4 +4,6 @@ import com.hepan.api.entity.AdUser;
 
 public interface AdUserService {
     AdUser login(AdUser user);
+
+    AdUser register(AdUser user);
 }

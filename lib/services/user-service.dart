@@ -17,4 +17,12 @@ class UserService {
       throw Exception('Failed to load data from API');
     }
   }
+
+  Future<User> register(User user) async {
+    Response response = await _dio.post(
+      '${globalConfig().apiUrl}/ad-user/register',
+      data: user.toJson(), // 将用户对象转换为 JSON 格式并发送
+    );
+    return User.getUserFromJson(response.data);
+  }
 }
