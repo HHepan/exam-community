@@ -27,4 +27,13 @@ public class AdUserServiceImpl implements AdUserService {
             return new AdUser();
         }
     }
+
+    @Override
+    public AdUser register(AdUser user) {
+        AdUser adUser = new AdUser();
+        adUser.setName(user.getName());
+        adUser.setPhone(user.getPhone());
+        adUser.setPassword(user.getPassword());
+        return this.adUserRepository.save(adUser);
+    }
 }

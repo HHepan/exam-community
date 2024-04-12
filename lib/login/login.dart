@@ -1,3 +1,4 @@
+import 'package:exam_community/login/register.dart';
 import 'package:flutter/material.dart';
 import '../entity/User.dart';
 import '../services/user-service.dart';
@@ -67,9 +68,7 @@ class _LoginState extends State<Login> {
                         phone: _phoneController.text,
                         password: _passwordController.text,
                       );
-                      print('${user}');
                       User loginUser = await _userService.login(user);
-                      print('loginUser ${loginUser}');
                       if (loginUser.phone != '') {
                         // 调用父组件传递的登录回调函数
                         widget.onLogin();
@@ -92,7 +91,10 @@ class _LoginState extends State<Login> {
                 width: 400, // 设置按钮的最小宽度
                 child: FloatingActionButton.extended(
                     onPressed: () {
-                      // 调用父组件传递的登录回调函数
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Register()),
+                      );
                     },
                     label: Text('还没有账号？点我注册',
                         style: TextStyle(
