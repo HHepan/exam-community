@@ -13,6 +13,6 @@ class BlogPost {
 
   @override
   String toString() {
-    return 'User{BlogPost: $title, content: $content, likes: $likes, comments: $comments}';
+    return 'BlogPost{BlogPost: $title, content: $content, likes: $likes, comments: $comments}';
   }
 }
