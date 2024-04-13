@@ -1,6 +1,9 @@
+import 'package:exam_community/entity/QuestionBank.dart';
+import 'package:exam_community/entity/test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../services/question-bank-service.dart';
 import 'examing.dart'; // 导入服务类库
 
 class RandomQuestions extends StatefulWidget {
@@ -9,8 +12,30 @@ class RandomQuestions extends StatefulWidget {
 }
 
 class _RandomQuestionsState extends State<RandomQuestions> {
+  final QuestionBankService _questionBankService = QuestionBankService(); // 创建 UserService 实例
   String _selectedItem = '请选择题库'; // 默认选中项
+  TextEditingController _testNameController = TextEditingController();
+  TextEditingController _testQuestionNumController = TextEditingController();
+  TextEditingController _testTimeController = TextEditingController();
   bool _showInputFields = false; // 控制输入框的显示与隐藏
+  List<QuestionBank> allQuestionBanks = [];
+  List<String> questionBanksItems = <String>[
+  '请选择题库'
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _questionBankService.getAll().then((questionBanks) {
+      // 在这里处理获取到的数据
+      setState(() {
+        allQuestionBanks = questionBanks;
+        questionBanks.forEach((element) {
+          questionBanksItems.add(element.name);
+        });
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +49,7 @@ class _RandomQuestionsState extends State<RandomQuestions> {
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: TextField(
+              controller: _testNameController,
               decoration: InputDecoration(
                 labelText: '测试名称',
                 border: OutlineInputBorder(),
@@ -50,12 +76,7 @@ class _RandomQuestionsState extends State<RandomQuestions> {
                       }
                     });
                   },
-                  items: <String>[
-                    '请选择题库',
-                    '考研数学',
-                    '考研英语',
-                    '考研政治'
-                  ].map<DropdownMenuItem<String>>((String value) {
+                  items: questionBanksItems.map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
@@ -69,6 +90,7 @@ class _RandomQuestionsState extends State<RandomQuestions> {
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: TextField(
+                controller: _testQuestionNumController,
                 decoration: InputDecoration(
                   labelText: '题目总数',
                   border: OutlineInputBorder(),
@@ -84,6 +106,7 @@ class _RandomQuestionsState extends State<RandomQuestions> {
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: TextField(
+                controller: _testTimeController,
                 decoration: InputDecoration(
                   labelText: '测试时长（单位：分钟）',
                   border: OutlineInputBorder(),
@@ -102,11 +125,30 @@ class _RandomQuestionsState extends State<RandomQuestions> {
                 Container(
                   width: 360, // 设置父容器的宽度
                   child: ElevatedButton(
-                    onPressed: () => {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Examing()),
-                      )
+                    onPressed: () {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => Examing()),
+                      // )
+                      print('当前所选择的题库名称：$_selectedItem');
+                      allQuestionBanks.forEach((element) async {
+                        if (element.name == _selectedItem) {
+                          print('当前所选的题库：${element.id}');
+                          QuestionBank selectedQuestionBank = await _questionBankService.getById(element.id);
+                          print('getById 返回的题库数据 $selectedQuestionBank');
+                          print('_testNameController ${_testNameController.text}');
+                          print('_testQuestionNumController ${_testQuestionNumController.text}');
+                          print('_testTimeController ${_testTimeController.text}');
+                          Test willSaveTest = Test(
+                            name: _testNameController.text,
+                            questionsNum: _testQuestionNumController.text,
+                            questions: selectedQuestionBank.questions,
+                            startTime: DateTime.now().toString(),
+                            endTime: DateTime.now().add(Duration(minutes: int.parse(_testTimeController.text))).toString()
+                          );
+                          print('willSaveTest $willSaveTest');
+                        }
+                      });
                     },
                     child: Text('随机出题并开始测试'),
                   ),
