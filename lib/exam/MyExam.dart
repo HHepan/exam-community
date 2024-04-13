@@ -4,8 +4,8 @@ import 'package:exam_community/exam/TransmitPage.dart';
 class MyExam extends StatelessWidget {
   MyExam({super.key});
   final int num = 5;
-  String beginTime = '2024-04-12 08:00:00';
-  String endTime = '2024-04-12 08:30:00';
+  String beginTime = '2024-04-13 03:00:00';
+  String endTime = '2024-04-13 10:30:00';
 
   @override
   Widget build(BuildContext context) {

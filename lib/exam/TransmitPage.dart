@@ -1,3 +1,5 @@
+import 'package:exam_community/exam/onGoingExam.dart';
+import 'package:exam_community/exam/doneExam.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -64,18 +66,35 @@ class TransmitPage extends StatelessWidget {
         onPressed: () {
           _showExamNotStartedDialog(context);
         },
-        child: Text('参加考试'),
+        child: Text('开始考试'),
       );
     } else if (DateTime.now().isAfter(EndTime)) {
       return ElevatedButton(
         onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DoneExam(
+                    title: text,
+                  )
+              )
+          );
         },
         child: Text('查看详情'),
       );
     } else {
       return ElevatedButton(
-        onPressed: () {},
-        child: Text("参加考试"),
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => OnGoingExam(
+                    title: text,
+                  ),
+              )
+          );
+        },
+        child: Text("开始考试"),
       );
     }
   }
