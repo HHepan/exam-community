@@ -106,7 +106,11 @@ class _ExamingState extends State<Examing> {
     });
   }
 
-  void _submitDialog() {
+  void _submitDialog(bool isBack) {
+    String title = '确认交卷？';
+    if (isBack) {
+      title = '退出此页面系统将自动为您提交作答，请确认？';
+    }
     showDialog(
       context: context,
       builder: (context) {
@@ -118,7 +122,7 @@ class _ExamingState extends State<Examing> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('确认交卷？', style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
                 SizedBox(height: 12),
                 Text('交卷后可在考试/测试记录中查看', style: TextStyle(fontSize: 18)),
               ],
@@ -140,29 +144,7 @@ class _ExamingState extends State<Examing> {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () {
-                      List<TestAnswerStatus> willSaveItemList = [];
-
-                      showQuestions.forEach((showQuestion) {
-                        Question questionSpy = thisTest.questions[0];
-                        thisTest.questions.forEach((element) {
-                          if (element.id.toString() == showQuestion['id']) {
-                            questionSpy = element;
-                          }
-                        });
-
-                        TestAnswerStatus willSaveItem = TestAnswerStatus(
-                          adUserAnswer: showQuestion['selectedOption'],
-                          correctAnswer: questionSpy.answer,
-                          adUser: globalConfig().currentUser as User,
-                          test: thisTest,
-                          question: questionSpy,
-                        );
-                        willSaveItemList.add(willSaveItem);
-                      });
-
-                      print('willSaveItemList $willSaveItemList');
-                      _testAnswerStatusService.save(willSaveItemList);
-
+                      onSave();
                       Navigator.of(context).pop();  // 关闭确认退出对话框
                       Navigator.pop(context);
                       Navigator.pop(context);
@@ -183,6 +165,30 @@ class _ExamingState extends State<Examing> {
     );
   }
 
+  onSave() {
+    List<TestAnswerStatus> willSaveItemList = [];
+
+    showQuestions.forEach((showQuestion) {
+      Question questionSpy = thisTest.questions[0];
+      thisTest.questions.forEach((element) {
+        if (element.id.toString() == showQuestion['id']) {
+          questionSpy = element;
+        }
+      });
+
+      TestAnswerStatus willSaveItem = TestAnswerStatus(
+        adUserAnswer: showQuestion['selectedOption'],
+        correctAnswer: questionSpy.answer,
+        adUser: globalConfig().currentUser as User,
+        test: thisTest,
+        question: questionSpy,
+      );
+      willSaveItemList.add(willSaveItem);
+    });
+
+    _testAnswerStatusService.save(willSaveItemList);
+  }
+
   @override
   void dispose() {
     _timer.cancel(); // 销毁计时器
@@ -199,6 +205,12 @@ class _ExamingState extends State<Examing> {
         title: Text(
           '$testName',
           style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            _submitDialog(true);
+          },
         ),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
@@ -253,7 +265,7 @@ class _ExamingState extends State<Examing> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    _submitDialog();
+                    _submitDialog(false);
                   },
                   child: Text('我要交卷'),
                   style: ElevatedButton.styleFrom(
