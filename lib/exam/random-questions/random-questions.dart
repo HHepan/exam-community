@@ -1,10 +1,13 @@
+import 'dart:math';
+
 import 'package:exam_community/entity/QuestionBank.dart';
 import 'package:exam_community/entity/test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../entity/ Question.dart';
 import '../../services/question-bank-service.dart';
-import 'examing.dart'; // 导入服务类库
+import '../../services/test.dart';
 
 class RandomQuestions extends StatefulWidget {
   @override
@@ -12,7 +15,8 @@ class RandomQuestions extends StatefulWidget {
 }
 
 class _RandomQuestionsState extends State<RandomQuestions> {
-  final QuestionBankService _questionBankService = QuestionBankService(); // 创建 UserService 实例
+  final QuestionBankService _questionBankService = QuestionBankService(); // 创建 QuestionBankService 实例
+  final TestService _testService = TestService(); // 创建 TestService 实例
   String _selectedItem = '请选择题库'; // 默认选中项
   TextEditingController _testNameController = TextEditingController();
   TextEditingController _testQuestionNumController = TextEditingController();
@@ -36,6 +40,90 @@ class _RandomQuestionsState extends State<RandomQuestions> {
       });
     });
   }
+
+  void _startTestDialog(Test saveTest) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('${saveTest.name}', style: TextStyle(fontWeight: FontWeight.bold)),
+                  SizedBox(height: 12),
+                  Text('共${saveTest.questionNum}道题', style: TextStyle(fontSize: 18)),
+                  SizedBox(height: 12),
+                  Text('${saveTest.startTime}开始', style: TextStyle(fontSize: 18)),
+                  SizedBox(height: 12),
+                  Text('预计${saveTest.endTime}结束', style: TextStyle(fontSize: 18)),
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // 关闭确认退出对话框
+                    },
+                    child: Text('取消'),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();  // 关闭确认退出对话框
+                    },
+                    child: Text(
+                      '开始答题',
+                      style: TextStyle(
+                        color: ColorScheme.fromSeed(seedColor: Colors.green).primary,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  List<int> generateRandomNumbers(int number, int max) {
+    if (number <= 0 || max <= 0 || number > max) {
+      throw ArgumentError('Invalid input parameters');
+    }
+
+    Set<int> selectedNumbers = {};
+    Random random = Random();
+
+    while (selectedNumbers.length < number) {
+      int randomNumber = random.nextInt(max);
+      if (!selectedNumbers.contains(randomNumber)) {
+        selectedNumbers.add(randomNumber);
+      }
+    }
+
+    return selectedNumbers.toList();
+  }
+
+  List<Question> getRandomQuestions(List<Question> questions, int num) {
+    List<Question> result = [];
+    List<int> randomNumbers = generateRandomNumbers(num, questions.length);
+    randomNumbers.forEach((element) {
+      result.add(questions[element]);
+    });
+    return result;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -130,23 +218,26 @@ class _RandomQuestionsState extends State<RandomQuestions> {
                       //   context,
                       //   MaterialPageRoute(builder: (context) => Examing()),
                       // )
-                      print('当前所选择的题库名称：$_selectedItem');
                       allQuestionBanks.forEach((element) async {
                         if (element.name == _selectedItem) {
-                          print('当前所选的题库：${element.id}');
                           QuestionBank selectedQuestionBank = await _questionBankService.getById(element.id);
-                          print('getById 返回的题库数据 $selectedQuestionBank');
-                          print('_testNameController ${_testNameController.text}');
-                          print('_testQuestionNumController ${_testQuestionNumController.text}');
-                          print('_testTimeController ${_testTimeController.text}');
+                          DateTime now = DateTime.now().toLocal();
+                          DateTime end = now.add(Duration(minutes: int.parse(_testTimeController.text)));
+                          String startTime = '${now.year}-${now.month}-${now.day} ${now.hour}:${now.minute}';
+                          String endTime = '${end.year}-${end.month}-${end.day} ${end.hour}:${end.minute}';
+
                           Test willSaveTest = Test(
                             name: _testNameController.text,
-                            questionsNum: _testQuestionNumController.text,
-                            questions: selectedQuestionBank.questions,
-                            startTime: DateTime.now().toString(),
-                            endTime: DateTime.now().add(Duration(minutes: int.parse(_testTimeController.text))).toString()
+                            questionNum: _testQuestionNumController.text,
+                            questions: getRandomQuestions(selectedQuestionBank.questions, int.parse(_testQuestionNumController.text)),
+                            startTime: startTime,
+                            endTime: endTime
                           );
-                          print('willSaveTest $willSaveTest');
+                          Test savedTest = await _testService.save(willSaveTest);
+                          print('savedTest $savedTest');
+                          if (savedTest.id != 0) {
+                            _startTestDialog(savedTest);
+                          }
                         }
                       });
                     },
