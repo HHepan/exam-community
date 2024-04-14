@@ -36,6 +36,10 @@ public class Question {
     @JsonView(Student.AnswerStatusJsonView.class)
     private List<AnswerStatus> answerStatuses;
 
+    @OneToMany( mappedBy = "question" )
+    @JsonView(TestAnswerStatusJsonView.class)
+    private List<TestAnswerStatus> testAnswerStatuses;
+
 
     public Long getId() { return id; }
 
@@ -69,6 +73,14 @@ public class Question {
         this.answerStatuses = answerStatuses;
     }
 
+    public List<TestAnswerStatus> getTestAnswerStatus() {
+        return testAnswerStatuses;
+    }
+
+    public void setTestAnswerStatus(List<TestAnswerStatus> answerStatuses) {
+        this.testAnswerStatuses = testAnswerStatuses;
+    }
+
     public interface IdJsonView {}
     public interface StemJsonView {}
     public interface OptionsJsonView {}
@@ -83,4 +95,5 @@ public class Question {
             Exam.IdJsonView,
             Exam.NameJsonView
     {}
+    public interface TestAnswerStatusJsonView {}
 }

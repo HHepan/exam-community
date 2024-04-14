@@ -1,13 +1,14 @@
 import 'dart:math';
 
 import 'package:exam_community/entity/QuestionBank.dart';
-import 'package:exam_community/entity/test.dart';
+import 'package:exam_community/entity/Test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../entity/ Question.dart';
+import '../../entity/Question.dart';
 import '../../services/question-bank-service.dart';
 import '../../services/test.dart';
+import 'examing.dart';
 
 class RandomQuestions extends StatefulWidget {
   @override
@@ -80,6 +81,10 @@ class _RandomQuestionsState extends State<RandomQuestions> {
                   child: OutlinedButton(
                     onPressed: () {
                       Navigator.of(context).pop();  // 关闭确认退出对话框
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Examing(testId: saveTest.id)),
+                      );
                     },
                     child: Text(
                       '开始答题',
@@ -214,10 +219,6 @@ class _RandomQuestionsState extends State<RandomQuestions> {
                   width: 360, // 设置父容器的宽度
                   child: ElevatedButton(
                     onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => Examing()),
-                      // )
                       allQuestionBanks.forEach((element) async {
                         if (element.name == _selectedItem) {
                           QuestionBank selectedQuestionBank = await _questionBankService.getById(element.id);
@@ -234,7 +235,6 @@ class _RandomQuestionsState extends State<RandomQuestions> {
                             endTime: endTime
                           );
                           Test savedTest = await _testService.save(willSaveTest);
-                          print('savedTest $savedTest');
                           if (savedTest.id != 0) {
                             _startTestDialog(savedTest);
                           }

@@ -1,10 +1,9 @@
 package com.hepan.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 // 安卓用户实体
 @Entity
@@ -31,6 +30,10 @@ public class AdUser {
 
     @JsonView(EmailJsonView.class)
     private String email;
+
+    @OneToMany( mappedBy = "adUser" )
+    @JsonView(TestAnswerStatusJsonView.class)
+    private List<TestAnswerStatus> testAnswerStatus;
 
     public Long getId() {
         return id;
@@ -88,6 +91,14 @@ public class AdUser {
         this.email = email;
     }
 
+    public List<TestAnswerStatus> getTestAnswerStatus() {
+        return testAnswerStatus;
+    }
+
+    public void setTestAnswerStatus(List<TestAnswerStatus> email) {
+        this.testAnswerStatus = testAnswerStatus;
+    }
+
     public interface IdJsonView {}
     public interface NameJsonView {}
     public interface PhoneJsonView {}
@@ -95,4 +106,5 @@ public class AdUser {
     public interface SexJsonView {}
     public interface AgeJsonView {}
     public interface EmailJsonView {}
+    public interface TestAnswerStatusJsonView {}
 }

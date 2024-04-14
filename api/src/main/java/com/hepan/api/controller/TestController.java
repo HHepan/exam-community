@@ -31,6 +31,12 @@ public class TestController {
         return this.testService.save(test);
     }
 
+    @GetMapping("{id}")
+    @JsonView(getByIdJsonView.class)
+    Test getById(@PathVariable Long id) {
+        return this.testService.getById(id);
+    }
+
     private interface saveJsonView extends
             Test.IdJsonView,
             Test.NameJsonView,
@@ -38,5 +44,8 @@ public class TestController {
             Test.StartTimeJsonView,
             Test.EndTimeJsonView,
             Test.QuestionsJsonView
+    {}
+
+    private interface getByIdJsonView extends saveJsonView
     {}
 }
