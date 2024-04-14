@@ -3,7 +3,7 @@ import ' Question.dart';
 class Test {
   final int id;
   final String name;
-  final String questionsNum;
+  final String questionNum;
   final String startTime;
   final String endTime;
   final List<Question> questions;
@@ -11,7 +11,7 @@ class Test {
   Test({
     this.id = 0,
     this.name = '',
-    this.questionsNum = '',
+    this.questionNum = '',
     this.startTime = '',
     this.endTime = '',
     this.questions = const [], // 初始化questions字段为空列表
@@ -19,7 +19,7 @@ class Test {
 
   @override
   String toString() {
-    return 'Test{id: $id, name: $name, questionsNum: $questionsNum, startTime: $startTime, endTime: $endTime, questions: $questions}';
+    return 'Test{id: $id, name: $name, questionsNum: $questionNum, startTime: $startTime, endTime: $endTime, questions: $questions}';
   }
 
   static List<Test> getTestListFromJson(List<Map<String, dynamic>> json) {
@@ -50,7 +50,7 @@ class Test {
       tests.add(Test(
         id: idFromJson,
         name: nameFromJson,
-        questionsNum: questionsNumFromJson,
+        questionNum: questionsNumFromJson,
         startTime: startTimeFromJson,
         endTime: endTimeFromJson,
       ));
@@ -62,7 +62,7 @@ class Test {
   static Test getOneTestFromJson(Map<String, dynamic> json) {
     int idFromJson = 0;
     String nameFromJson = '';
-    String questionsNumFromJson = '';
+    String questionNumFromJson = '';
     String startTimeFromJson = '';
     String endTimeFromJson = '';
     List<Question> questionsFromJson = [];
@@ -73,8 +73,8 @@ class Test {
     if (json['name'] != null) {
       nameFromJson = json['name'];
     }
-    if (json['questionsNum'] != null) {
-      questionsNumFromJson = json['questionsNum'];
+    if (json['questionNum'] != null) {
+      questionNumFromJson = json['questionNum'];
     }
     if (json['startTime'] != null) {
       startTimeFromJson = json['startTime'];
@@ -89,7 +89,7 @@ class Test {
     return Test(
       id: idFromJson,
       name: nameFromJson,
-      questionsNum: questionsNumFromJson,
+      questionNum: questionNumFromJson,
       startTime: startTimeFromJson,
       endTime: endTimeFromJson,
       questions: questionsFromJson,
@@ -99,7 +99,7 @@ class Test {
   Map<String, dynamic> toJson() => {
     'id': id,
     'name': name,
-    'questionsNum': questionsNum,
+    'questionNum': questionNum,
     'startTime': startTime,
     'endTime': endTime,
     'questions': questions.map((question) => question.toJson()).toList(),
