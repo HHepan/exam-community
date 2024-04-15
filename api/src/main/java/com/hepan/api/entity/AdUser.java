@@ -35,6 +35,10 @@ public class AdUser {
     @JsonView(TestAnswerStatusJsonView.class)
     private List<TestAnswerStatus> testAnswerStatus;
 
+    @OneToMany( mappedBy = "adUser" )
+    @JsonView(BlogPostJsonView.class)
+    private List<BlogPost> blogPost;
+
     public Long getId() {
         return id;
     }
@@ -99,6 +103,14 @@ public class AdUser {
         this.testAnswerStatus = testAnswerStatus;
     }
 
+    public List<BlogPost> getBlogPost() {
+        return blogPost;
+    }
+
+    public void setBlogPost(List<BlogPost> blogPost) {
+        this.blogPost = blogPost;
+    }
+
     public interface IdJsonView {}
     public interface NameJsonView {}
     public interface PhoneJsonView {}
@@ -107,4 +119,5 @@ public class AdUser {
     public interface AgeJsonView {}
     public interface EmailJsonView {}
     public interface TestAnswerStatusJsonView {}
+    public interface BlogPostJsonView {}
 }

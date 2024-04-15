@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../entity/BlogPost.dart';
+import '../services/blog-post-service.dart';
 import 'add-blog.dart';
 import 'comments.dart';
 
@@ -10,11 +11,24 @@ class Community extends StatefulWidget {
 }
 
 class _CommunityState extends State<Community> {
-  // 假设已经有一个包含20条博客数据的列表
-  List<BlogPost> blogPosts = List.generate(20, (index) => BlogPost(
-    title: 'Title $index',
-    content: 'Content $index @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@',
-  ));
+  final BlogPostService _blogPostService = BlogPostService(); // 创建 TestService 实例
+  List<BlogPost> blogPosts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    refresh();
+  }
+
+  void refresh() {
+    print('refresh');
+    _blogPostService.getAll().then((callBackBlogPostList) {
+      // 在这里处理获取到的数据
+      setState(() {
+        blogPosts = callBackBlogPostList;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +40,18 @@ class _CommunityState extends State<Community> {
             child: Column(
               children: [
                 ListTile(
-                  title: Text(blogPosts[index].title),
-                  subtitle: Text(blogPosts[index].content),
+                  title: Text(blogPosts[index].adUser.name),
+                  subtitle: Text('发布时间：${blogPosts[index].postTime}'),
                 ),
+                SizedBox(height: 10),
+                Container( // 使用 Container 组件包裹 Text 组件，并设置 alignment 为 Alignment.centerLeft
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    '   ${blogPosts[index].content}',
+                    style: TextStyle(fontSize: 22.0, color: Colors.black),
+                  ),
+                ),
+                SizedBox(height: 10),
                 ButtonBar(
                   alignment: MainAxisAlignment.end,
                   children: [
@@ -63,7 +86,12 @@ class _CommunityState extends State<Community> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => AddBlog()),
-          );
+          ).then((value) {
+            print('value $value');
+            if (value == true) {
+              refresh();
+            }
+          });
         },
         child: Icon(Icons.add),
       ),

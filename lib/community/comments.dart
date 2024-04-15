@@ -42,8 +42,16 @@ class Comments extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ListTile(
-                      title: Text(blogPost.title),
-                      subtitle: Text(blogPost.content),
+                      title: Text(blogPost.adUser.name),
+                      subtitle: Text('发布时间：${blogPost.postTime}'),
+                    ),
+                    SizedBox(height: 10),
+                    Container( // 使用 Container 组件包裹 Text 组件，并设置 alignment 为 Alignment.centerLeft
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        '   ${blogPost.content}',
+                        style: TextStyle(fontSize: 22.0, color: Colors.black),
+                      ),
                     ),
                   ],
                 ),
