@@ -6,4 +6,7 @@ import java.util.List;
 
 public interface TestAnswerStatusService {
     void save(List<TestAnswerStatus> testAnswerStatusList);
+    Iterable<TestAnswerStatus> getListTestAnswerStatusByAdUserId(Long adUserId);
+
+    Iterable<TestAnswerStatus> getTestAnswerStatusListByTestId(Long id);
 }

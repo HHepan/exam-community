@@ -1,6 +1,9 @@
 package com.hepan.api.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.hepan.api.entity.AnswerStatus;
+import com.hepan.api.entity.Question;
+import com.hepan.api.entity.Test;
 import com.hepan.api.entity.TestAnswerStatus;
 import com.hepan.api.service.TestAnswerStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,4 +26,19 @@ public class TestAnswerStatusController {
     public void save(@RequestBody List<TestAnswerStatus> testAnswerStatusList) {
         this.testAnswerStatusService.save(testAnswerStatusList);
     }
+
+    @GetMapping("{id}")
+    @JsonView(getTestAnswerStatusListByAdUserIdJsonView.class)
+    Iterable<TestAnswerStatus> getTestAnswerStatusListByTestId(@PathVariable Long id) {
+        return this.testAnswerStatusService.getTestAnswerStatusListByTestId(id);
+    }
+
+    private interface getTestAnswerStatusListByAdUserIdJsonView extends
+            TestAnswerStatus.IdJsonView,
+            TestAnswerStatus.AdUserAnswerJsonView,
+            TestAnswerStatus.CorrectAnswerJsonView,
+            TestAnswerStatus.TestJsonView,
+            TestAnswerStatus.AdUserJsonView,
+            TestAnswerStatus.QuestionJsonView
+    {}
 }

@@ -24,6 +24,22 @@ class TestAnswerStatus {
     return 'TestAnswerStatus{id: $id, adUserAnswer: $adUserAnswer, correctAnswer: $correctAnswer, user: $adUser, test: $test, question: $question}';
   }
 
+  static List<TestAnswerStatus> getTestAnswerStatusListFromJson(List<Map<String, dynamic>> json) {
+    List<TestAnswerStatus> testAnswerStatuses = [];
+    for (var i = 0; i < json.length; i++) {
+      testAnswerStatuses.add(TestAnswerStatus(
+          id: json[i]['id'] ?? 0,
+          adUserAnswer: json[i]['adUserAnswer'] ?? '',
+          correctAnswer: json[i]['correctAnswer'] ?? '',
+          adUser: User.getUserFromJson(json[i]['adUser']),
+          test: Test.getOneTestFromJson(json[i]['test']),
+          question: Question.getQuestionFromJson(json[i]['question'])
+      ));
+    }
+
+    return testAnswerStatuses;
+  }
+
   static TestAnswerStatus getTestAnswerStatusFromJson(Map<String, dynamic> json) {
     return TestAnswerStatus(
       id: json['id'] ?? 0,

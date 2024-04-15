@@ -7,7 +7,7 @@ import '../../entity/Test.dart';
 import '../../entity/TestAnswerStatus.dart';
 import '../../entity/User.dart';
 import '../../services/test-answer-status-service.dart';
-import '../../services/test.dart';
+import '../../services/test-service.dart';
 import '../exam.dart'; // 导入 Timer 类库
 
 class Examing extends StatefulWidget {
@@ -106,7 +106,11 @@ class _ExamingState extends State<Examing> {
     });
   }
 
-  void _submitDialog() {
+  void _submitDialog(bool isBack) {
+    String title = '确认交卷？';
+    if (isBack) {
+      title = '退出此页面系统将自动为您提交作答，请确认？';
+    }
     showDialog(
       context: context,
       builder: (context) {
@@ -118,7 +122,7 @@ class _ExamingState extends State<Examing> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('确认交卷？', style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
                 SizedBox(height: 12),
                 Text('交卷后可在考试/测试记录中查看', style: TextStyle(fontSize: 18)),
               ],
@@ -140,29 +144,7 @@ class _ExamingState extends State<Examing> {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () {
-                      List<TestAnswerStatus> willSaveItemList = [];
-
-                      showQuestions.forEach((showQuestion) {
-                        Question questionSpy = thisTest.questions[0];
-                        thisTest.questions.forEach((element) {
-                          if (element.id.toString() == showQuestion['id']) {
-                            questionSpy = element;
-                          }
-                        });
-
-                        TestAnswerStatus willSaveItem = TestAnswerStatus(
-                          adUserAnswer: showQuestion['selectedOption'],
-                          correctAnswer: questionSpy.answer,
-                          adUser: globalConfig().currentUser as User,
-                          test: thisTest,
-                          question: questionSpy,
-                        );
-                        willSaveItemList.add(willSaveItem);
-                      });
-
-                      print('willSaveItemList $willSaveItemList');
-                      _testAnswerStatusService.save(willSaveItemList);
-
+                      onSave();
                       Navigator.of(context).pop();  // 关闭确认退出对话框
                       Navigator.pop(context);
                       Navigator.pop(context);
@@ -183,6 +165,30 @@ class _ExamingState extends State<Examing> {
     );
   }
 
+  onSave() {
+    List<TestAnswerStatus> willSaveItemList = [];
+
+    showQuestions.forEach((showQuestion) {
+      Question questionSpy = thisTest.questions[0];
+      thisTest.questions.forEach((element) {
+        if (element.id.toString() == showQuestion['id']) {
+          questionSpy = element;
+        }
+      });
+
+      TestAnswerStatus willSaveItem = TestAnswerStatus(
+        adUserAnswer: showQuestion['selectedOption'],
+        correctAnswer: questionSpy.answer,
+        adUser: globalConfig().currentUser as User,
+        test: thisTest,
+        question: questionSpy,
+      );
+      willSaveItemList.add(willSaveItem);
+    });
+
+    _testAnswerStatusService.save(willSaveItemList);
+  }
+
   @override
   void dispose() {
     _timer.cancel(); // 销毁计时器
@@ -200,6 +206,12 @@ class _ExamingState extends State<Examing> {
           '$testName',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            _submitDialog(true);
+          },
+        ),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: Column(
@@ -215,14 +227,14 @@ class _ExamingState extends State<Examing> {
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
                         '${index + 1}. ${showQuestions[index]['question']}',
-                        style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.black87),
+                        style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.black87),
                       ),
                     ),
                     ...List<Widget>.generate(showQuestions[index]['options'].length, (int i) {
                       return RadioListTile(
                         title: Text(
                           showQuestions[index]['options'][i],
-                          style: TextStyle(fontSize: 19.0, color: Colors.black54),
+                          style: TextStyle(fontSize: 22.0, color: Colors.black54),
                         ),
                         value: showQuestions[index]['options'][i],
                         groupValue: showQuestions[index]['selectedOption'],
@@ -253,7 +265,7 @@ class _ExamingState extends State<Examing> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    _submitDialog();
+                    _submitDialog(false);
                   },
                   child: Text('我要交卷'),
                   style: ElevatedButton.styleFrom(

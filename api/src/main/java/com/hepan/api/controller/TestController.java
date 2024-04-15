@@ -1,12 +1,15 @@
 package com.hepan.api.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.hepan.api.entity.Exam;
 import com.hepan.api.entity.Test;
 import com.hepan.api.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -37,6 +40,12 @@ public class TestController {
         return this.testService.getById(id);
     }
 
+    @GetMapping("get-list-by-user-id/{id}")
+    @JsonView(getListByAdUserIdJsonView.class)
+    List<Test> getListByAdUserId(@PathVariable Long id) {
+        return this.testService.getListByAdUserId(id);
+    }
+
     private interface saveJsonView extends
             Test.IdJsonView,
             Test.NameJsonView,
@@ -47,5 +56,13 @@ public class TestController {
     {}
 
     private interface getByIdJsonView extends saveJsonView
+    {}
+
+    private interface getListByAdUserIdJsonView extends
+            Test.IdJsonView,
+            Test.NameJsonView,
+            Test.QuestionNumJsonView,
+            Test.StartTimeJsonView,
+            Test.EndTimeJsonView
     {}
 }
