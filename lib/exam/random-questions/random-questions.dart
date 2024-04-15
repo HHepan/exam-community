@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 
 import '../../entity/Question.dart';
 import '../../services/question-bank-service.dart';
-import '../../services/test.dart';
+import '../../services/test-service.dart';
 import 'examing.dart';
 
 class RandomQuestions extends StatefulWidget {
@@ -27,6 +27,7 @@ class _RandomQuestionsState extends State<RandomQuestions> {
   List<String> questionBanksItems = <String>[
   '请选择题库'
   ];
+  Test _willSaveTest = Test();
 
   @override
   void initState() {
@@ -42,7 +43,7 @@ class _RandomQuestionsState extends State<RandomQuestions> {
     });
   }
 
-  void _startTestDialog(Test saveTest) {
+  void _startTestDialog() {
     showDialog(
       context: context,
       builder: (context) {
@@ -54,13 +55,13 @@ class _RandomQuestionsState extends State<RandomQuestions> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${saveTest.name}', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text('${_willSaveTest.name}', style: TextStyle(fontWeight: FontWeight.bold)),
                   SizedBox(height: 12),
-                  Text('共${saveTest.questionNum}道题', style: TextStyle(fontSize: 18)),
+                  Text('共${_willSaveTest.questionNum}道题', style: TextStyle(fontSize: 18)),
                   SizedBox(height: 12),
-                  Text('${saveTest.startTime}开始', style: TextStyle(fontSize: 18)),
+                  Text('${_willSaveTest.startTime}开始', style: TextStyle(fontSize: 18)),
                   SizedBox(height: 12),
-                  Text('预计${saveTest.endTime}结束', style: TextStyle(fontSize: 18)),
+                  Text('预计${_willSaveTest.endTime}结束', style: TextStyle(fontSize: 18)),
                 ],
               ),
             ],
@@ -73,18 +74,21 @@ class _RandomQuestionsState extends State<RandomQuestions> {
                     onPressed: () {
                       Navigator.of(context).pop(); // 关闭确认退出对话框
                     },
-                    child: Text('取消'),
+                    child: Text('稍等一下'),
                   ),
                 ),
                 SizedBox(width: 10),
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();  // 关闭确认退出对话框
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Examing(testId: saveTest.id)),
-                      );
+                    onPressed: () async {
+                      Test savedTest = await _testService.save(_willSaveTest);
+                      if (savedTest.id != 0) {
+                        Navigator.of(context).pop();  // 关闭确认退出对话框
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Examing(testId: savedTest.id)),
+                        );
+                      }
                     },
                     child: Text(
                       '开始答题',
@@ -234,10 +238,8 @@ class _RandomQuestionsState extends State<RandomQuestions> {
                             startTime: startTime,
                             endTime: endTime
                           );
-                          Test savedTest = await _testService.save(willSaveTest);
-                          if (savedTest.id != 0) {
-                            _startTestDialog(savedTest);
-                          }
+                          _willSaveTest = willSaveTest;
+                          _startTestDialog();
                         }
                       });
                     },

@@ -1,3 +1,4 @@
+import 'package:exam_community/exam/exam-records/records.dart';
 import 'package:exam_community/exam/random-questions/random-questions.dart';
 import 'package:flutter/material.dart';
 
@@ -44,7 +45,10 @@ class Exam extends StatelessWidget {
                 width: 400, // 设置按钮的最小宽度
                 child: FloatingActionButton.extended(
                     onPressed: () => {
-
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Records()),
+                      ),
                     },
                     label: Text('考试/测试记录', style: TextStyle(fontSize: 20))
                 )

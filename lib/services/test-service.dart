@@ -18,4 +18,13 @@ class TestService {
       '${globalConfig().apiUrl}/test/$id');
     return Test.getOneTestFromJson(response.data);
   }
+
+  getListByUserId(int id) async {
+    Response response = await _dio.get(
+        '${globalConfig().apiUrl}/test/get-list-by-user-id/$id');
+
+    List<Map<String, dynamic>> jsonData = List<Map<String, dynamic>>.from(response.data);
+
+    return Test.getTestListFromJson(jsonData);
+  }
 }
