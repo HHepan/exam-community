@@ -19,7 +19,6 @@ class _Records extends State<Records> {
   void initState() {
     super.initState();
     _testService.getListByUserId(globalConfig().currentUser!.id).then((callBackTest) {
-      print('_Records init callback $callBackTest');
       // 在这里处理获取到的数据
       setState(() {
         testList = callBackTest;

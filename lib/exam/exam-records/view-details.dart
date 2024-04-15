@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../entity/TestAnswerStatus.dart';
 import '../../services/test-answer-status-service.dart';
 
 class ViewDetails extends StatefulWidget {
@@ -13,40 +14,52 @@ class ViewDetails extends StatefulWidget {
 
 class _ViewDetails extends State<ViewDetails> {
   final TestAnswerStatusService _testAnswerStatusService = TestAnswerStatusService(); // 创建 TestService 实例
+  List<TestAnswerStatus> _testAnswerStatusList = [];
+  String _testName = '';
 
   @override
   void initState() {
     super.initState();
     _testAnswerStatusService.getTestAnswerStatusListByTestId(widget.testId).then((callBackTest) {
-      print('ViewDetails callBackTest $callBackTest');
       // 在这里处理获取到的数据
       setState(() {
-
+        _testAnswerStatusList = callBackTest;
+        _testName = callBackTest[0].test.name;
       });
     });
   }
 
-  // 假设题目数据
-  List<Map<String, dynamic>> showQuestions = [
-    {
-      'id': '1',
-      'question': '题干1',
-      'options': ['1', '2', '3', '4'],
-      'selectedOption': '',
-    },
-    {
-      'id': '2',
-      'question': '题干2',
-      'options': ['1', '2', '3', '4'],
-      'selectedOption': '',
+  int countCorrectAnswers(List<TestAnswerStatus> testAnswerStatusList) {
+    int correctCount = 0;
+    for (var testAnswerStatus in testAnswerStatusList) {
+      if (testAnswerStatus.adUserAnswer.split('. ')[0] == testAnswerStatus.correctAnswer) {
+        correctCount++;
+      }
     }
-  ];
+    return correctCount;
+  }
+
+  List<String> parseOptions(String input) {
+    List<String> options = input.split(';');
+    List<String> formattedOptions = [];
+
+    for (String option in options) {
+      List<String> parts = option.split('-');
+      if (parts.length == 2) {
+        String formattedOption = "${parts[0].trim()}. ${parts[1].trim()}";
+        formattedOptions.add(formattedOption);
+      }
+    }
+
+    return formattedOptions;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '<测试名称>',
+          '${_testName}',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -55,7 +68,7 @@ class _ViewDetails extends State<ViewDetails> {
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: showQuestions.length,
+              itemCount: _testAnswerStatusList.length,
               itemBuilder: (BuildContext context, int index) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,21 +79,21 @@ class _ViewDetails extends State<ViewDetails> {
                         children: [
                           Expanded(
                             child: Text(
-                              '${index + 1}. ${showQuestions[index]['question']}',
+                              '${index + 1}. ${_testAnswerStatusList[index].question.stem}',
                               style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.black87),
                             ),
                           ),
                           Icon(
-                            false ? Icons.check_circle : Icons.cancel,
-                            color: false ? Colors.green : Colors.red,
+                            _testAnswerStatusList[index].adUserAnswer.split('. ')[0] == _testAnswerStatusList[index].correctAnswer ? Icons.check_circle : Icons.cancel,
+                            color: _testAnswerStatusList[index].adUserAnswer.split('. ')[0] == _testAnswerStatusList[index].correctAnswer ? Colors.green : Colors.red,
                           ),
                         ],
                       )
                     ),
-                    ...List<Widget>.generate(showQuestions[index]['options'].length, (int i) {
+                    ...List<Widget>.generate(parseOptions(_testAnswerStatusList[index].question.options).length, (int i) {
                       return ListTile(
                         title: Text(
-                          showQuestions[index]['options'][i],
+                          parseOptions(_testAnswerStatusList[index].question.options)[i],
                           style: TextStyle(fontSize: 22.0, color: Colors.black54),
                         ),
                       );
@@ -92,15 +105,11 @@ class _ViewDetails extends State<ViewDetails> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Text(
-                          '你的答案：X',
+                          '你的答案：${_testAnswerStatusList[index].adUserAnswer.split('. ')[0]}',
                           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          ' 正确答案：Q',
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          '回答正确',
+                          '正确答案：${_testAnswerStatusList[index].correctAnswer}',
                           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       ],
@@ -119,11 +128,11 @@ class _ViewDetails extends State<ViewDetails> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  '正确 xx 题 /',
+                  '正确 ${countCorrectAnswers(_testAnswerStatusList)} 题 /',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  ' 共 xx 题',
+                  ' 共 ${_testAnswerStatusList.length} 题',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ],
