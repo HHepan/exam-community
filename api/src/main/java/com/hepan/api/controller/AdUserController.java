@@ -36,17 +36,21 @@ public class AdUserController {
      * @return 安卓用户
      */
     @PostMapping("register")
+    @JsonView(RegisterJsonView.class)
     @ResponseStatus(HttpStatus.CREATED)
     public AdUser register(@RequestBody AdUser user) {
         return this.adUserService.register(user);
     }
 
     @PostMapping("update")
+    @JsonView(UpdateJsonView.class)
     @ResponseStatus(HttpStatus.CREATED)
     public AdUser update(@RequestBody AdUser user) {
         return this.adUserService.update(user);
     }
 
+    private interface RegisterJsonView extends AdLoginJsonView {}
+    private interface UpdateJsonView extends AdLoginJsonView {}
     private interface AdLoginJsonView extends
             AdUser.IdJsonView,
             AdUser.NameJsonView,
