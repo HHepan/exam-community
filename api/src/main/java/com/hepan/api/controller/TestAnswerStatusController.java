@@ -27,6 +27,12 @@ public class TestAnswerStatusController {
         this.testAnswerStatusService.save(testAnswerStatusList);
     }
 
+    @GetMapping("testBaiduApi")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void testBaiduApi() {
+        this.testAnswerStatusService.testBaiduApi();
+    }
+
     @GetMapping("{id}")
     @JsonView(getTestAnswerStatusListByAdUserIdJsonView.class)
     Iterable<TestAnswerStatus> getTestAnswerStatusListByTestId(@PathVariable Long id) {

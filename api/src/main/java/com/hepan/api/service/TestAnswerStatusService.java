@@ -9,4 +9,6 @@ public interface TestAnswerStatusService {
     Iterable<TestAnswerStatus> getListTestAnswerStatusByAdUserId(Long adUserId);
 
     Iterable<TestAnswerStatus> getTestAnswerStatusListByTestId(Long id);
+
+    void testBaiduApi();
 }
