@@ -32,11 +32,25 @@ class _ViewDetails extends State<ViewDetails> {
   int countCorrectAnswers(List<TestAnswerStatus> testAnswerStatusList) {
     int correctCount = 0;
     for (var testAnswerStatus in testAnswerStatusList) {
-      if (testAnswerStatus.adUserAnswer.split('. ')[0] == testAnswerStatus.correctAnswer) {
-        correctCount++;
+      if (testAnswerStatus.question.options == '') {
+         if (testAnswerStatus.analysis == '1') {
+           correctCount++;
+         }
+      } else {
+        if (testAnswerStatus.adUserAnswer.split('. ')[0] == testAnswerStatus.correctAnswer) {
+          correctCount++;
+        }
       }
     }
     return correctCount;
+  }
+
+  bool isRight(TestAnswerStatus testAnswerStatusList) {
+    if (testAnswerStatusList.question.options == '') {
+        return testAnswerStatusList.analysis == '1';
+    } else {
+      return testAnswerStatusList.adUserAnswer.split('. ')[0] == testAnswerStatusList.correctAnswer;
+    }
   }
 
   List<String> parseOptions(String input) {
@@ -84,8 +98,8 @@ class _ViewDetails extends State<ViewDetails> {
                             ),
                           ),
                           Icon(
-                            _testAnswerStatusList[index].adUserAnswer.split('. ')[0] == _testAnswerStatusList[index].correctAnswer ? Icons.check_circle : Icons.cancel,
-                            color: _testAnswerStatusList[index].adUserAnswer.split('. ')[0] == _testAnswerStatusList[index].correctAnswer ? Colors.green : Colors.red,
+                            isRight(_testAnswerStatusList[index]) ? Icons.check_circle : Icons.cancel,
+                            color: isRight(_testAnswerStatusList[index]) ? Colors.green : Colors.red,
                           ),
                         ],
                       )
@@ -99,23 +113,72 @@ class _ViewDetails extends State<ViewDetails> {
                       );
                     }),
                     SizedBox(height: 10.0), // 添加间距
-                    Divider(height: 1.0, color: Colors.grey), // 添加分割线
+                    Divider(height: 1.0), // 添加分割线
                     SizedBox(height: 10.0),
+
+                    if (_testAnswerStatusList[index].question.options != '')
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text(
+                            '你的答案：${_testAnswerStatusList[index].adUserAnswer.split('. ')[0]}',
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            '正确答案：${_testAnswerStatusList[index].correctAnswer}',
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+
+                    if (_testAnswerStatusList[index].question.options == '')
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0), // 设置垂直和水平方向的间距
+                            child: Text(
+                              '正确答案：${_testAnswerStatusList[index].correctAnswer}',
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      ),
+                    SizedBox(height: 10.0),
+                    if (_testAnswerStatusList[index].question.options == '')
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text(
-                          '你的答案：${_testAnswerStatusList[index].adUserAnswer.split('. ')[0]}',
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          '正确答案：${_testAnswerStatusList[index].correctAnswer}',
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        Container(
+                          padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0), // 设置垂直和水平方向的间距
+                          child: Text(
+                            '你的答案：${_testAnswerStatusList[index].adUserAnswer.split('. ')[0]}',
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ],
                     ),
                     SizedBox(height: 10.0),
-                    Divider(height: 1.0, color: Colors.grey),
+                    if (_testAnswerStatusList[index].question.options == '')
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0), // 设置垂直和水平方向的间距
+                            child: Text(
+                              '错题分析：${_testAnswerStatusList[index].analysis == '1' ? '无' : _testAnswerStatusList[index].analysis}',
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 50, // 设置最大显示行数
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: 10.0),
+                    Divider(height: 1.0, color: Colors.black),
                     SizedBox(height: 10.0), // 添加间距
                   ],
                 );

@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class TestAnswerStatusServiceImpl implements TestAnswerStatusService {
@@ -28,6 +29,12 @@ public class TestAnswerStatusServiceImpl implements TestAnswerStatusService {
 
     @Override
     public void save(List<TestAnswerStatus> testAnswerStatusList) {
+        testAnswerStatusList.forEach(item -> {
+            if (Objects.equals(item.getQuestion().getOptions(), "")) {
+                String analysis = this.answerBaiduApi(item.getQuestion().getStem(), item.getCorrectAnswer(), item.getAdUserAnswer());
+                item.setAnalysis(analysis);
+            }
+        });
         this.testAnswerStatusRepository.saveAll(testAnswerStatusList);
     }
 
@@ -42,7 +49,7 @@ public class TestAnswerStatusServiceImpl implements TestAnswerStatusService {
     }
 
     @Override
-    public void testBaiduApi() {
+    public String answerBaiduApi(String stem, String correctAnswer, String answer) {
         ResponseEntity<String> a = this.getAccessToken();
         String responseBody = a.getBody();
 
@@ -56,9 +63,8 @@ public class TestAnswerStatusServiceImpl implements TestAnswerStatusService {
 
         String accessToken = jsonNode.get("access_token").asText();
 
-        System.out.println(accessToken);
 
-        this.getAnswerFromBaiduChat(accessToken);
+        return this.getAnswerFromBaiduChat(accessToken, stem, correctAnswer, answer);
     }
 
     private ResponseEntity<String> getAccessToken() {
@@ -77,18 +83,20 @@ public class TestAnswerStatusServiceImpl implements TestAnswerStatusService {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.postForEntity(url, new HttpEntity<>(payload, headers), String.class);
 
-        System.out.println(ResponseEntity.ok(response.getBody()));
 
         return ResponseEntity.ok(response.getBody());
     }
 
-    private void getAnswerFromBaiduChat(String access_token) {
+    private String getAnswerFromBaiduChat(String access_token, String stem, String correctAnswer, String answer) {
         String url = "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/completions?access_token=" + access_token;
 
         String requestBody = "{\n" +
                 "   \"messages\": [\n" +
                 "    {\"role\":\"user\",\"content\":\"" +
-                "hello" +
+                "Question stem:" + stem + ";" +
+                "correct answer:" + correctAnswer + ";" +
+                "my answer:" + answer + ";" +
+                "Is my answer correct? If it is correct, please only reply 1; if it is incorrect, please do an analysis of the wrong question.Please reply in Chinese and limit the length of your answer to 255 characters." +
                 "\"}\n" +
                 "   ]\n" +
                 "}";
@@ -96,6 +104,16 @@ public class TestAnswerStatusServiceImpl implements TestAnswerStatusService {
         RestTemplate restTemplate = new RestTemplate();
         String response = restTemplate.postForObject(url, requestBody, String.class);
 
-        System.out.println("getAnswerFromBaiduChat:" + response);
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = null;
+        try {
+            jsonNode = objectMapper.readTree(response);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        String result = jsonNode.get("result").asText();
+
+        return result;
     }
 }

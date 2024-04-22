@@ -10,5 +10,5 @@ public interface TestAnswerStatusService {
 
     Iterable<TestAnswerStatus> getTestAnswerStatusListByTestId(Long id);
 
-    void testBaiduApi();
+    String answerBaiduApi(String stem, String correctAnswer, String answer);
 }

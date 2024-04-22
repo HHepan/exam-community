@@ -44,7 +44,7 @@ class _ExamingState extends State<Examing> {
                 'id': '${question.id}',
                 'question': '${question.stem}',
                 'options': parseOptions(question.options),
-                'selectedOption': '',
+                'answer': '',
               }
           );
         });
@@ -79,6 +79,9 @@ class _ExamingState extends State<Examing> {
 
 
   List<String> parseOptions(String input) {
+    if (input == '') {
+      return [];
+    }
     List<String> options = input.split(';');
     List<String> formattedOptions = [];
 
@@ -177,7 +180,7 @@ class _ExamingState extends State<Examing> {
       });
 
       TestAnswerStatus willSaveItem = TestAnswerStatus(
-        adUserAnswer: showQuestion['selectedOption'],
+        adUserAnswer: showQuestion['answer'],
         correctAnswer: questionSpy.answer,
         adUser: globalConfig().currentUser as User,
         test: thisTest,
@@ -237,15 +240,34 @@ class _ExamingState extends State<Examing> {
                           style: TextStyle(fontSize: 22.0, color: Colors.black54),
                         ),
                         value: showQuestions[index]['options'][i],
-                        groupValue: showQuestions[index]['selectedOption'],
+                        groupValue: showQuestions[index]['answer'],
                         onChanged: (value) {
                           setState(() {
-                            showQuestions[index]['selectedOption'] = value.toString();
+                            showQuestions[index]['answer'] = value.toString();
                           });
                         },
                         activeColor: Colors.blue, // 选中项的颜色
                       );
                     }),
+
+                    if (showQuestions[index]['options'].length == 0)
+                      Container(
+                        padding: EdgeInsets.all(16.0),
+                        child: TextField(
+                          minLines: 5, // 设置最小行数为 5
+                          maxLines: null, // 不限制最大行数
+                          decoration: InputDecoration(
+                              hintText: '第${index + 1}题在此作答',
+                              border: OutlineInputBorder()
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              showQuestions[index]['answer'] = value.toString();
+                            });
+                          },
+                        ),
+                      ),
+
                     SizedBox(height: 10.0), // 添加间距
                     Divider(height: 1.0, color: Colors.grey), // 添加分割线
                     SizedBox(height: 10.0), // 添加间距
