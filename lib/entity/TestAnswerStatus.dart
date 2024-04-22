@@ -6,6 +6,7 @@ class TestAnswerStatus {
   final int id;
   final String adUserAnswer;
   final String correctAnswer;
+  final String analysis;
   final User adUser;
   final Test test;
   final Question question;
@@ -14,6 +15,7 @@ class TestAnswerStatus {
     this.id = 0,
     this.adUserAnswer = '',
     this.correctAnswer = '',
+    this.analysis = '',
     required this.adUser,
     required this.test,
     required this.question,
@@ -21,7 +23,7 @@ class TestAnswerStatus {
 
   @override
   String toString() {
-    return 'TestAnswerStatus{id: $id, adUserAnswer: $adUserAnswer, correctAnswer: $correctAnswer, user: $adUser, test: $test, question: $question}';
+    return 'TestAnswerStatus{id: $id, adUserAnswer: $adUserAnswer, correctAnswer: $correctAnswer, analysis: $analysis, user: $adUser, test: $test, question: $question}';
   }
 
   static List<TestAnswerStatus> getTestAnswerStatusListFromJson(List<Map<String, dynamic>> json) {
@@ -31,6 +33,7 @@ class TestAnswerStatus {
           id: json[i]['id'] ?? 0,
           adUserAnswer: json[i]['adUserAnswer'] ?? '',
           correctAnswer: json[i]['correctAnswer'] ?? '',
+          analysis: json[i]['analysis'] ?? '',
           adUser: User.getUserFromJson(json[i]['adUser']),
           test: Test.getOneTestFromJson(json[i]['test']),
           question: Question.getQuestionFromJson(json[i]['question'])
@@ -45,6 +48,7 @@ class TestAnswerStatus {
       id: json['id'] ?? 0,
       adUserAnswer: json['adUserAnswer'] ?? '',
       correctAnswer: json['correctAnswer'] ?? '',
+      analysis: json['analysis'] ?? '',
       adUser: User.getUserFromJson(json['user']),
       test: Test.getOneTestFromJson(json['test']),
       question: Question.getQuestionFromJson(json['question'])
@@ -55,6 +59,7 @@ class TestAnswerStatus {
     'id': id,
     'adUserAnswer': adUserAnswer,
     'correctAnswer': correctAnswer,
+    'analysis': analysis,
     'adUser': adUser.toJson(),
     'test': test.toJson(),
     'question': question.toJson(),

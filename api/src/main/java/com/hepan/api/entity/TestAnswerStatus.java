@@ -16,6 +16,9 @@ public class TestAnswerStatus {
     @JsonView(CorrectAnswerJsonView.class)
     private String correctAnswer;
 
+    @JsonView(AnalysisJsonView.class)
+    private String analysis;
+
     @ManyToOne
     @JsonView(AdUserJsonView.class)
     @JoinColumn(name = "ad_user_id")
@@ -43,6 +46,10 @@ public class TestAnswerStatus {
 
     public void setCorrectAnswer(String correctAnswer) { this.correctAnswer = correctAnswer; }
 
+    public String getAnalysis() { return analysis; }
+
+    public void setAnalysis(String analysis) { this.analysis = analysis; }
+
     public AdUser getAdUser() { return adUser; }
 
     public void setAdUser(AdUser adUser) { this.adUser = adUser; }
@@ -58,6 +65,7 @@ public class TestAnswerStatus {
     public interface IdJsonView {}
     public interface AdUserAnswerJsonView {}
     public interface CorrectAnswerJsonView {}
+    public interface AnalysisJsonView {}
     public interface AdUserJsonView extends
             AdUser.IdJsonView,
             AdUser.NameJsonView
